@@ -1,0 +1,77 @@
+﻿<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minimal API — access и refresh</title>
+<style>
+  body {
+    font: 17px/1.5 system-ui;
+    max-width: 780px;
+    margin: 48px auto;
+    padding: 0 20px;
+    color: #182539;
+    background: #f5f7fb;
+  }
+
+  section {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid #d7deeb;
+  }
+
+  label {
+    display: block;
+    margin: 10px 0;
+  }
+
+  input, button, select {
+    font: inherit;
+    padding: 8px 12px;
+    border: 1px solid #a9b7cc;
+    border-radius: 6px;
+  }
+
+  button {
+    cursor: pointer;
+    margin: 6px 4px 6px 0;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    background: #142237;
+    color: #e4eeff;
+    padding: 18px;
+    border-radius: 8px;
+  }
+</style>
+<!-- Access виден JavaScript только в памяти; refresh браузер хранит в HttpOnly cookie. -->
+<h1>Access + Refresh</h1>
+<p>Две роли: Student и Teacher. Access хранится в памяти страницы, refresh — в HttpOnly cookie.</p>
+<!-- Форма отправляет credentials на /web/auth/login. -->
+<section>
+  <h2>Вход</h2>
+  <label>Демо-пользователь <select id="account"><option value="student">Student</option><option value="teacher">Teacher</option></select></label>
+  <form id="login">
+    <label>Логин <input id="userName" autocomplete="username" value="student" required></label>
+    <label>Пароль <input id="password" type="password" autocomplete="current-password" value="Student-123!" required></label>
+    <button>Войти</button>
+  </form>
+  <p id="status" role="status">Нет access-токена</p>
+</section>
+<!-- Кнопки вызывают защищённые API endpoints с Authorization: Bearer. -->
+<section>
+  <h2>Защищённые запросы</h2>
+  <button data-path="/api/profile">Профиль</button>
+  <button data-path="/api/student">Только Student</button>
+  <button data-path="/api/teacher">Только Teacher</button>
+  <button id="logout">Выйти</button>
+  <p>Дождитесь истечения access и нажмите «Профиль»: клиент обновит токены и повторит запрос. При 403 обновление не выполняется.</p>
+</section>
+<!-- Журнал показывает статусы и результат автоматической ротации. -->
+<h2>Журнал запросов</h2>
+<pre id="log" role="log"></pre>
+<script type="module" src="/app.js"></script>
+</html>
